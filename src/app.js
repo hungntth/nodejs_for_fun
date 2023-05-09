@@ -5,10 +5,12 @@ const compression = require('compression')
 const app = express();
 
 app.use(morgan('dev'));
-
 app.use(helmet());
-
 app.use(compression());
+
+require('./dbs/init.mongodb');
+const { checkOverload } = require('./helpers/check.connect');
+checkOverload()
 
 
 module.exports = app
