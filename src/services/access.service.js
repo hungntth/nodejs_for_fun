@@ -29,10 +29,9 @@ class AccessService {
                     name, email, password: passwordHash, roles: [RoleShop.SHOP]
                 });
 
+                const publicKey = crypto.randomBytes(64).toString('hex')
+                const privateKey = crypto.randomBytes(64).toString('hex')
                 if(newShop) {
-                    const publicKey = crypto.randomBytes(64).toString('hex')
-                    const privateKey = crypto.randomBytes(64).toString('hex')
-
                     const keyStore = await KeyTokenService.createKeyToken({
                         userId: newShop._id,
                         publicKey,
@@ -45,8 +44,8 @@ class AccessService {
                             message: 'keyStore error',
                         })
                     }
-                    const tokens = await createTokenPair({userId: newShop._id, email},publicKey, privateKey)
                 }
+                const tokens = await createTokenPair({userId: newShop._id, email},publicKey, privateKey)
                 return {
                     code: 201,
                     metadata: {

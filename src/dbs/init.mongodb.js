@@ -33,13 +33,12 @@ class Database {
     // singleton pattern => tạo ra 1 instance duy nhất tránh việc connect tạo ra instance mới liên tục
     // ở nodejs có require('mongose) hỗ trợ nhưng ở php, java hay python là oẳng :))
     static getInstance() {
-        if(Database.instance) {
+        if(!Database.instance) {
             Database.instance = new Database()
         }
 
         return Database.instance
     }
 }
-
 const instanceMongoodb = Database.getInstance();
 module.exports = instanceMongoodb

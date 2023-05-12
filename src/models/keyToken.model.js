@@ -7,7 +7,7 @@ const DOCUMENT_NAME ='KeyStore';
 const COLLECTION = 'KeysStore';
 
 // Declare the Schema of the Mongo model
-var ketTokenSchema = new Schema({
+var keyTokenSchema = new Schema({
     user:{
         type:Schema.Types.ObjectId,
         required:true,
@@ -31,4 +31,4 @@ var ketTokenSchema = new Schema({
 });
 
 //Export the model
-module.exports = model(DOCUMENT_NAME, ketTokenSchema);
+module.exports = model(DOCUMENT_NAME, keyTokenSchema);

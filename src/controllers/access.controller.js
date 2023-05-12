@@ -1,6 +1,6 @@
 'use strict'
 
-AccessService = require('../services/access.service')
+const AccessService = require('../services/access.service')
 
 class AccessController {
 
