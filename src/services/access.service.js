@@ -24,18 +24,22 @@ class AccessService {
     if(!match) throw new AuthFailureError('Authentication error')
     const publicKey = crypto.randomBytes(64).toString("hex");
     const privateKey = crypto.randomBytes(64).toString("hex");
-
     const {_id: userId} = foundShop;
-    const tokens = await createTokenPair({ userId, email }, publicKey, privateKey);
+    console.log({ userId, email })
+    const tokens = await createTokenPair(
+      { userId: foundShop._id, email },
+      publicKey,
+      privateKey
+    );
 
-    await KeyTokenService({
-      refreshToken: tokens.refreshToken,
+    await KeyTokenService.createKeyToken({
+      refreshToken: null,
       privateKey,
       publicKey
     })
     return {
       metadata: {
-        shop: getInfoData({fildes: ["_id", "name", "email"], object: newShop,}),
+        shop: getInfoData({fildes: ["_id", "name", "email"], object: foundShop,}),
         tokens,
       },
     };
