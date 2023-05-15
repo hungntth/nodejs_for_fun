@@ -7,5 +7,7 @@ const getInfoData = ({ fildes = [], object = {}}) => {
 }
 
 module.exports = {
-    getInfoData
+    getInfoData,
+    StatusCodes: require('./statusCodes'),
+    ReasonPhrases: require('./reasonPhrases'),
 }
