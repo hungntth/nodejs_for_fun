@@ -11,6 +11,15 @@ class ProductController {
             )
         }).send(res)
     }
+
+    getAllDraftsForShop = async(req,res,next) => {
+        new SuccessResponse({
+            message: 'Get list Draft success!',
+            metadata: await ProductSerivce.findAllDraftForShop({
+                product_shop: req.body.product_shop
+            })
+        }).send(res)
+    }
 }
 
 module.exports = new ProductController()
