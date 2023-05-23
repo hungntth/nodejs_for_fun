@@ -6,6 +6,8 @@ const router = express.Router();
 const { asyncHandler } = require('../../auth/checkAuthen');
 
 router.get('/search/:keySearch', asyncHandler(productController.getListSearchProduct))
+router.get('', asyncHandler(productController.findAllProducts))
+router.get('/:product_id', asyncHandler(productController.findProducts))
 
 //authen
 router.post('', asyncHandler(productController.createProduct))

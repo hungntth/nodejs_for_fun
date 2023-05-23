@@ -54,6 +54,22 @@ class ProductController {
             })
         }).send(res)
     }
+
+    findAllProducts = async(req,res,next) => {
+        new SuccessResponse({
+            message: 'Get list Draft success!',
+            metadata: await ProductSerivce.findAllProduct(req.query)
+        }).send(res)
+    }
+
+    findProducts = async(req,res,next) => {
+        new SuccessResponse({
+            message: 'Get list Draft success!',
+            metadata: await ProductSerivce.findProduct({
+                product_id: req.params.product_id
+            })
+        }).send(res)
+    }
 }
 
 module.exports = new ProductController()
