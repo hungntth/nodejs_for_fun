@@ -32,6 +32,9 @@ const productSchema = new Schema({
     timestamps: true
 });
 
+// create index for search
+productSchema.index({product_name: 'text', product_desc: 'text'})
+
 
 //webhook middleware
 productSchema.pre('save', function(next) {

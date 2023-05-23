@@ -12,10 +12,44 @@ class ProductController {
         }).send(res)
     }
 
+    publishProductByShop = async(req, res, next) => {
+        new SuccessResponse({
+            message: 'Publish success',
+            metadata: await ProductSerivce.publishProductByShop(
+                req.body.product_type, req.params.id
+            )
+        }).send(res)
+    }
+
+    unPublishProductByShop = async(req, res, next) => {
+        new SuccessResponse({
+            message: 'Unpublish success',
+            metadata: await ProductSerivce.publishProductByShop(
+                req.body.product_type, req.params.id
+            )
+        }).send(res)
+    }
+
     getAllDraftsForShop = async(req,res,next) => {
         new SuccessResponse({
             message: 'Get list Draft success!',
             metadata: await ProductSerivce.findAllDraftForShop({
+                product_shop: req.body.product_shop
+            })
+        }).send(res)
+    }
+
+    getListSearchProduct = async(req,res,next) => {
+        new SuccessResponse({
+            message: 'Get list success!',
+            metadata: await ProductSerivce.searchProducts(req.params)
+        }).send(res)
+    }
+
+    getAllPublishForShop = async(req,res,next) => {
+        new SuccessResponse({
+            message: 'Get list Draft success!',
+            metadata: await ProductSerivce.findAllPublishForShop({
                 product_shop: req.body.product_shop
             })
         }).send(res)
