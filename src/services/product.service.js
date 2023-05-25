@@ -3,7 +3,8 @@
 const {product, clothing, electronic, furniture} = require('../models/product.model');
 const { BadRequestError,  } = require('../core/error.response');
 const { findAllDraftsForShop, publishProductByShop, findAllPublishForShop, 
-        searchProduct, findAllProduct, findProduct } = require('../models/repository/product.repo');
+        searchProduct, findAllProduct, findProduct, updateProductById } = require('../models/repository/product.repo');
+const { removeUndefinedObject, updateNestedObjeactParser } = require('../utils');
 
 
 class ProductFactory {
@@ -20,11 +21,11 @@ class ProductFactory {
         return new productClass(payload).createProduct()
     }
 
-    static async updateProduct(type, payload) {
+    static async updateProduct(type, product_id, payload) {
         const productClass = ProductFactory.productRegistry[type]
         if(!productClass) throw new BadRequestError(`Invalid product type ${type}`)
 
-        return new productClass(payload).createProduct()
+        return new productClass(payload).updateProduct(product_id)
     }
 
     static async publishProductByShop ({product_shop, product_id}) {
@@ -76,6 +77,10 @@ class Product {
     async createProduct() {
         return await product.create(this)
     }
+
+    async updateProduct(product_id, payload) {
+        return await updateProductById({product_id, payload, model: product})
+    }
 }
 
 
@@ -87,8 +92,17 @@ class Clothing extends Product {
 
         const newProduct = await super.createProduct()
         if(!newProduct) throw new BadRequestError('create new Clothing error')
-
         return newProduct;
+    }
+
+    updateProduct = async (product_id) => {
+        const objeactParams = removeUndefinedObject(this)
+        if(objeactParams.product_attributes){
+            await updateProductById({product_id, payload: updateNestedObjeactParser(objeactParams.product_attributes), model: clothing})
+        }
+
+        const updateProduct = await super.updateProduct(product_id, updateNestedObjeactParser(objeactParams))
+        return updateProduct
     }
 }
 
