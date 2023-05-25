@@ -5,6 +5,7 @@ const { BadRequestError,  } = require('../core/error.response');
 const { findAllDraftsForShop, publishProductByShop, findAllPublishForShop, 
         searchProduct, findAllProduct, findProduct, updateProductById } = require('../models/repository/product.repo');
 const { removeUndefinedObject, updateNestedObjeactParser } = require('../utils');
+const { insertInventory } = require('../models/repository/inventory.repo');
 
 
 class ProductFactory {
@@ -74,8 +75,15 @@ class Product {
         this.product_attributes = product_attributes
     }
 
-    async createProduct() {
-        return await product.create(this)
+    async createProduct(product_id) {
+        const newProduct = await product.create({...this, _id: product_id})
+        if(newProduct){
+            await insertInventory({
+                productId: newProduct._id,
+                shopId: this.product_shop,
+                stock: this.product_quantity,
+            })
+        }
     }
 
     async updateProduct(product_id, payload) {
