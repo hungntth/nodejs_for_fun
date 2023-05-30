@@ -6,8 +6,8 @@ const { convertToObjectIdMongoose } = require('../utils');
 const { reservationInventory } = require('../models/repository/inventory.repo');
 const redisClient = redis.createClient()
 
-const pexprie = promisify(redisClient.pexprie).bind(redisClient)
-const setnxAsync = promisify(redisClient.setnx).bind(redisClient)
+const pexprie = promisify(redisClient.pExpire).bind(redisClient)
+const setnxAsync = promisify(redisClient.setNX).bind(redisClient)
 
 const acquireLock = async (productId, quantity, cartId) => {
     const key = `lock_v2023_${productId}`
