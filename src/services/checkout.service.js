@@ -1,8 +1,10 @@
 'use strict'
 
 const { BadRequestError } = require("../core/error.response")
+const orderModel = require("../models/order.model")
 const { findCartById } = require("../models/repository/cart.repo")
 const { getDiscountAmount } = require("./discount.service")
+const { releaseLock } = require("./redis.service")
 
 class CheckoutService {
     static async checkoutReview({
@@ -80,6 +82,49 @@ class CheckoutService {
         });
 
         const products = shop_order_ids_new.flatMap( order => order.products)
+        const acquireProduct = []
+        for( let i = 0; i < products.length; i++){
+            const { productId, quantity } = products[i];
+            const keyLock = await acquireLock(productId, quantity, cartId)
+            acquireProduct.push( keyLock ? true : false)
+            if(keyLock){
+                await releaseLock(keyLock)
+            }
+        }
+
+        if(acquireProduct.includes(false)){
+            throw new BadRequestError('San pham da duoc cap nhat, vui long xem lai ...')
+        }
+
+        const newOrder = await orderModel.order.create({
+            order_userId: userId,
+            order_checkout: checkout_order,
+            order_shipping: user_address,
+            order_payment: user_payment,
+            order_products: shop_order_ids_new,
+        });
+
+        if(newOrder){
+
+        }
+
+        return newOrder
+    }
+
+    static async getOrderByUser() {
+
+    }
+
+    static async getOneOrderByUser() {
+        
+    }
+
+    static async cancelOrderByUser() {
+        
+    }
+
+    static async updateOrder() {
+        
     }
 }
 
